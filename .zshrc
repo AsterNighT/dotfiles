@@ -113,7 +113,6 @@ source /usr/share/doc/fzf/examples/key-bindings.zsh
 source /usr/share/doc/fzf/examples/completion.zsh
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="/home/asternight/tools/diff-so-fancy:$PATH"
-export PATH="$PATH:/usr/local/go/bin"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib/x86_64-linux-gnu"
 export CPATH="/usr/local/include:$CPATH"
 export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute(code {})+abort'"
@@ -128,7 +127,24 @@ alias preview="fzf --preview 'batcat --color \"always\" {}'"
 alias weather="curl \"wttr.in?lang=zh\""
 alias vpn="zjunet vpn -c"
 
-# nvm start
+### zsh
+alias editzsh="code ~/.zshrc"
+###
+
+### go end
+export GO111MODULE="on"
+export PATH="$PATH:/usr/local/go/bin"
+export PATH="$PATH:$(go env GOPATH)/bin"
+export GOPROXY="https://goproxy.io,direct"
+### go end
+
+### kubebuilder
+export PATH=$PATH:/usr/local/kubebuilder/bin
+
+### docker
+alias dlocal="export DOCKER_REGISTRY=localhost:5000"
+
+### nvm begin
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -151,24 +167,5 @@ load-nvmrc() {
   fi
 }
 add-zsh-hook chpwd load-nvmrc
-load-nvmrcautoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
 load-nvmrc
-# nvm end
+### nvm end
